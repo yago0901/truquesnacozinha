@@ -69,8 +69,8 @@ const FinalCTA = () => {
           {/* Último empurrão */}
           <div className="text-center space-y-4">
             <p className="text-white/80 italic">
-              "A diferença entre quem tem sucesso na cozinha e quem não tem são apenas as técnicas certas. Você está a
-              um clique de descobrir todas elas."
+              &quot;A diferença entre quem tem sucesso na cozinha e quem não tem são apenas as técnicas certas. Você está a
+              um clique de descobrir todas elas.&quot;
             </p>
             <div className="text-sm text-white/60">
               Mais de 15.000 pessoas já transformaram suas cozinhas. Seja a próxima!

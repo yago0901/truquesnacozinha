@@ -109,7 +109,7 @@ const Problems = () => {
           <div className="border-2 border-orange-300 rounded-3xl p-6 w-full max-w-xs">
             <h3 className="text-xl font-bold mb-3">🔪 Truque: Não Chorar ao Cortar Cebola</h3>
             <p className="text-sm text-muted-foreground mb-4">
-              "Congele a cebola por 15 minutos antes de cortar!" - Volume 1
+              &quot;Congele a cebola por 15 minutos antes de cortar!&quot; - Volume 1
             </p>
             <Button
               size="sm"
@@ -124,7 +124,7 @@ const Problems = () => {
           <div className="border-2 border-amber-300 rounded-3xl p-6 w-full max-w-xs">
             <h3 className="text-xl font-bold mb-3">🍰 Truque: Teste do Bolo Perfeito</h3>
             <p className="text-sm text-muted-foreground mb-4">
-              "Use palito de dente - se sair limpo está pronto!" - Volume 2
+              &quot;Use palito de dente - se sair limpo está pronto!&quot; - Volume 2
             </p>
             <Button
               size="sm"
@@ -138,7 +138,7 @@ const Problems = () => {
           {/* Card 3 */}
           <div className="border-2 border-red-300 rounded-3xl p-6 w-full max-w-xs">
             <h3 className="text-xl font-bold mb-3">🍯 Truque: Caramelo Perfeito</h3>
-            <p className="text-sm text-muted-foreground mb-4">"Não mexa até dourar - segredo dos chefs!" - Volume 3</p>
+            <p className="text-sm text-muted-foreground mb-4">&quot;Não mexa até dourar - segredo dos chefs!&quot; - Volume 3</p>
             <Button
               size="sm"
               className="w-full bg-red-100 hover:bg-red-200 text-red-700 border border-red-300"

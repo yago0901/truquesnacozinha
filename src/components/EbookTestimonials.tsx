@@ -78,7 +78,7 @@ const EbookTestimonials = () => {
                 </div>
 
                 {/* Quote */}
-                <blockquote className="text-muted-foreground leading-relaxed">"{testimonial.quote}"</blockquote>
+                <blockquote className="text-muted-foreground leading-relaxed">&quot;{testimonial.quote}&quot;</blockquote>
 
                 {/* Author */}
                 <div className="flex items-center space-x-3 pt-4 border-t border-border">
