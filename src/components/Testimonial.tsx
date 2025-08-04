@@ -68,7 +68,7 @@ const Testimonial = () => {
 
             {/* Right - Testimonial Content */}
             <div className="space-y-6">
-              <div className="text-4xl text-primary">"</div>
+              <div className="text-4xl text-primary"></div>
               <blockquote className="text-lg text-muted-foreground leading-relaxed">{testimonials[0].quote}</blockquote>
               <div>
                 <div className="font-bold text-lg">{testimonials[0].name}</div>
