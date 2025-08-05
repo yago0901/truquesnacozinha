@@ -6,6 +6,7 @@ import EbookVolumes from '@/components/EbookVolumes';
 import EbookTestimonials from '@/components/EbookTestimonials';
 import Pricing from '@/components/Pricing';
 import FinalCTA from '@/components/FinalCTA';
+import FAQSection from '@/components/Faq';
 
 export default function Page() {
   return (
@@ -16,6 +17,7 @@ export default function Page() {
       <EbookVolumes />
       <EbookTestimonials />
       <Pricing />
+      <FAQSection/>
       <FinalCTA />
     </div>
   );

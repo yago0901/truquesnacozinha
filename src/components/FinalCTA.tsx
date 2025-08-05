@@ -1,15 +1,14 @@
-'use client'
+"use client";
 
 import { Button } from "@/components/ui/button";
 
 const FinalCTA = () => {
   return (
-    <section className="section-padding bg-gradient-to-r from-orange-200 to-orange-500 text-black">
+    <section className="bg-gradient-to-r from-orange-100 to-orange-300 text-black">
       <div className="container-custom">
         <div className="max-w-4xl mx-auto text-center space-y-8">
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight">
             Pare de Perder Tempo e Dinheiro na Cozinha.{" "}
-            <span className="text-yellow-200">Sua Transformação Começa Agora!</span>
           </h2>
 
           <div className="space-y-6 text-lg">
@@ -44,35 +43,39 @@ const FinalCTA = () => {
 
           {/* CTA Final */}
           <div className="space-y-6">
-            <div className="bg-white/20 rounded-3xl p-8 backdrop-blur">
-              <div className="space-y-4">
-                <div className="text-3xl font-bold">
-                  De R$ 297 por <span className="text-yellow-200">apenas R$ 97</span>
+            <div className="bg-white/30 border border-white/50 rounded-3xl p-8 backdrop-blur shadow-lg">
+              <div className="space-y-6 text-center">
+                <div className="text-2xl font-semibold text-black/80">
+                  De <span className="line-through text-red-600">R$: 82,50</span> por
                 </div>
-                <p className="text-white/90">3 volumes • 75 técnicas • Bônus exclusivos • Garantia total</p>
+                <div className="text-4xl font-extrabold text-yellow-500">Apenas R$ 49,90</div>
+
+                <p className="text-black/90 text-sm">3 volumes • 75 técnicas • Bônus exclusivos • Garantia total</p>
+
                 <Button
                   size="lg"
-                  className="bg-orange-400 text-primary hover:bg-white/90 text-xl py-6 px-12 w-full md:w-auto"
+                  className="bg-orange-400 text-primary hover:bg-black/90 text-xl py-6 px-12 w-full md:w-auto transition"
                   onClick={() => {
-                    // Adicione aqui qualquer lógica de pré-redirecionamento
-                    // Ex: Analytics, validações, etc.
                     window.open("https://mpago.la/1Er6XxF", "_blank", "noopener,noreferrer");
                   }}
                 >
-                  🚀 SIM, QUERO TRANSFORMAR MINHA COZINHA AGORA
+                  🚀 ADQUIRIR AGORA
                 </Button>
-                <p className="text-white/70 text-sm">⏰ Oferta expira em algumas horas • 🔒 Compra 100% segura</p>
+
+                <p className="text-black/70 text-sm italic">
+                  ⏰ Oferta expira em algumas horas • 🔒 Compra 100% segura
+                </p>
               </div>
             </div>
           </div>
 
           {/* Último empurrão */}
           <div className="text-center space-y-4">
-            <p className="text-white/80 italic">
-              &quot;A diferença entre quem tem sucesso na cozinha e quem não tem são apenas as técnicas certas. Você está a
-              um clique de descobrir todas elas.&quot;
+            <p className="text-black italic">
+              &quot;A diferença entre quem tem sucesso na cozinha e quem não tem são apenas as técnicas certas. Você
+              está a um clique de descobrir todas elas.&quot;
             </p>
-            <div className="text-sm text-white/60">
+            <div className="text-sm text-black">
               Mais de 15.000 pessoas já transformaram suas cozinhas. Seja a próxima!
             </div>
           </div>

@@ -11,21 +11,21 @@ const EbookHero = () => {
       <div className="container-custom">
         <div className="max-w-4xl mx-auto space-y-2">
           {/* Badge */}
-          <div className="inline-flex items-center bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium">
+          <div className="hidden md:inline-flex items-center bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium">
             🔥 OFERTA LIMITADA - 3 VOLUMES COMPLETOS
           </div>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
+          <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold leading-tight">
             <span className="text-gradient">75 SEGREDOS </span> PARA SE DAR BEM NA COZINHA
           </h1>
 
-          <div className="flex flex-col md:flex-row gap-8 items-center">
+          <div className="flex flex-col md:flex-row gap-4 items-center">
             <div className="space-y-6 md:w-[55%]">
               <p className="text-xl text-muted-foreground max-w-3xl">
-                Pare de sofrer na cozinha! Descubra os 3 segredos proibidos que os chefs não revelam o #2 vai te chocar!
+                Pare de sofrer na cozinha! Descubra os truques que ajudam a qualquer um na cozinha!
               </p>
 
               {/* Benefícios principais */}
-              <div className="grid md:grid-cols-1 gap-6 my-12">
+              <div className="hidden md:grid md:grid-cols-1 gap-6 my-12">
                 <div className="flex items-center space-x-3">
                   <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
                     <Check className="w-5 h-5 text-green-600" />
@@ -48,7 +48,7 @@ const EbookHero = () => {
             </div>
 
             {/* Imagem à direita */}
-            <div className="md:w-[45%] flex justify-center">
+            <div className="w-[85%] md:w-[45%] flex justify-center">
               <Image
                 src={Kit75Truques}
                 alt="Livro de receitas"
@@ -63,8 +63,8 @@ const EbookHero = () => {
           {/* Preço e CTA */}
           <div className="bg-card p-8 rounded-3xl shadow-lg max-w-md mx-auto">
             <div className="text-center space-y-4">
-              <div>
-                <span className="text-3xl font-bold text-primary">R$ 49,90</span>
+              <div className='hidden md:flex md:justify-center'>
+                <span className="text-3xl font-bold text-primary">R$ 39,90</span>
                 <span className="text-muted-foreground line-through ml-2">R$ 143,70</span>
               </div>
               <p className="text-sm text-muted-foreground">3 volumes completos • 75 técnicas • Acesso imediato</p>

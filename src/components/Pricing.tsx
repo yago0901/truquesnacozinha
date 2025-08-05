@@ -7,20 +7,20 @@ const Pricing = () => {
   const bonuses = [
     {
       title: "🎁 BÔNUS: Acesso ao Shakes com Way",
-      value: "R$ 49,90",
+      value: "R$ 14,90",
       description: "Receitas exclusivas de shakes para complementar sua dieta",
     },
     {
       title: "🎁 BÔNUS: Grupo VIP WhatsApp",
-      value: "R$ 49,90",
-      description: "Acesso ao grupo exclusivo com suporte direto",
+      value: "R$ 14,90",
+      description: "Acesso ao grupo exclusivo com suporte direto e dicas semanais",
     },
   ];
 
   const comparison = [
     { feature: "Técnicas profissionais", included: [true, true, true] },
     { feature: "Acesso imediato", included: [true, true, true] },
-    { feature: "Garantia de 30 dias", included: [true, true, true] },
+    { feature: "Garantia de 7 dias", included: [true, true, true] },
     { feature: "Bônus exclusivos", included: [false, false, true] },
     { feature: "Grupo VIP WhatsApp", included: [false, false, true] },
     { feature: "Todos os volumes", included: [false, true, true] },
@@ -29,10 +29,10 @@ const Pricing = () => {
   const packages = [
     {
       name: "Aprendiz",
-      description: "(Low Ticket - Gatilho de Entrada)",
+      description: "≈68,89% Off Valor por tempo limitado",
       price: "R$ 14,90",
       originalPrice: "R$ 47,90",
-      discount: "69% OFF",
+      discount: "≈68,89% OFF",
       installments: "ou 2x de R$ 7,45",
       cta: "QUERO APENAS 1 VOLUME",
       featured: false,
@@ -40,21 +40,21 @@ const Pricing = () => {
     },
     {
       name: "Combo Intermediário",
-      description: "(Upsell 1 - Melhor Custo-Benefício)",
-      price: "R$ 49,90",
+      description: "≈72,23% Off Valor por tempo limitado",
+      price: "R$ 39,90",
       originalPrice: "R$ 143,70",
-      discount: "65% OFF",
+      discount: "≈72,23% OFF",
       installments: "ou 2x de R$ 24,95",
       cta: "QUERO OS 3 VOLUMES",
       featured: true,
-      includes: "✅ Volumes 1 + 2 + 3 (Básico + Intermediário + Avançado)",
+      includes: "✅ Volumes 1 R$14,90 + 2 R$17,90 + 3 R$19,90",
     },
     {
       name: "Combo Premium",
-      description: "(Upsell 2 - Oferta Irrecusável)",
-      price: "R$ 79,90",
-      originalPrice: "R$ 297,00",
-      discount: "73% OFF",
+      description: "≈39,52% Off Valor por tempo limitado",
+      price: "R$ 49,90",
+      originalPrice: "R$ 82,50",
+      discount: "≈39,52% OFF",
       installments: "ou 2x de R$ 39,95",
       cta: "QUERO TUDO COM BÔNUS",
       featured: false,
