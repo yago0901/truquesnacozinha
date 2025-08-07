@@ -1,0 +1,79 @@
+"use client";
+
+import Header from "@/components/Header";
+import Script from "next/script";
+import { useEffect, useRef } from "react";
+
+declare global {
+  interface Window {
+    MercadoPago: any;
+  }
+}
+
+export default function Page() {
+  const brickContainerRef = useRef(null);
+
+  useEffect(() => {
+    const loadBrick = async () => {
+      // @ts-ignore
+      if (!window.MercadoPago) return;
+
+      const res = await fetch("/api/createPreference", { method: "POST" });
+      const { id: preferenceId } = await res.json();
+
+      // @ts-ignore
+      const mp = new window.MercadoPago(process.env.NEXT_PUBLIC_MP_PUBLIC_KEY!, {
+        locale: "pt-BR",
+      });
+
+      const bricksBuilder = mp.bricks();
+
+      bricksBuilder.create("payment", "brick_container", {
+        initialization: {
+          amount: 49.9,
+          preferenceId,
+        },
+        customization: {
+          paymentMethods: {
+            creditCard: "all",
+            mercadoPago: "all",
+            ticket: "all",
+            pix: "all",
+          },
+        },
+        callbacks: {
+          onReady: () => {
+            console.log("Brick pronto");
+          },
+          onSubmit: (formData: any) => {
+            return;
+          },
+          onError: (error: any) => {
+            console.error("Erro ao criar brick:", error);
+          },
+        },
+      });
+    };
+
+    // Espera 500ms para garantir que o SDK foi carregado
+    setTimeout(loadBrick, 500);
+  }, []);
+
+  return (
+    <>
+      <Script
+        src="https://sdk.mercadopago.com/js/v2"
+        strategy="afterInteractive"
+        onLoad={() => {
+          console.log("Mercado Pago SDK carregado");
+        }}
+      />
+      <div>
+        <Header />
+        <div className="mt-20">
+          <div id="brick_container" ref={brickContainerRef}></div>
+        </div>
+      </div>
+    </>
+  );
+}
