@@ -9,7 +9,7 @@ const client = new MercadoPagoConfig({
 
 export async function POST() {
   try {
-    //@ts-ignore
+    // @ts-expect-error
     const preference = await client.preferences.create({
       body: {
         items: [

@@ -15,13 +15,11 @@ export default function Page() {
 
   useEffect(() => {
     const loadBrick = async () => {
-      // @ts-ignore
       if (!window.MercadoPago) return;
 
       const res = await fetch("/api/createPreference", { method: "POST" });
       const { id: preferenceId } = await res.json();
 
-      // @ts-ignore
       const mp = new window.MercadoPago(process.env.NEXT_PUBLIC_MP_PUBLIC_KEY!, {
         locale: "pt-BR",
       });
@@ -45,7 +43,7 @@ export default function Page() {
           onReady: () => {
             console.log("Brick pronto");
           },
-          onSubmit: (formData: any) => {
+          onSubmit: () => {
             return;
           },
           onError: (error: any) => {
