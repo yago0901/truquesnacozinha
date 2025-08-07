@@ -9,7 +9,8 @@ const client = new MercadoPagoConfig({
 
 export async function POST() {
   try {
-    const preference = await (client as any).client.preferences.create({
+    // @ts-expect-error - método preferences não está tipado corretamente no SDK
+    const preference = await client.preferences.create({
       body: {
         items: [
           {

@@ -46,7 +46,7 @@ export default function Page() {
           onSubmit: () => {
             return;
           },
-          onError: (error: any) => {
+          onError: (error: unknown) => {
             console.error("Erro ao criar brick:", error);
           },
         },
