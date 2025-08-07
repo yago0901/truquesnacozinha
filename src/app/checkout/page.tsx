@@ -53,7 +53,6 @@ export default function Page() {
       });
     };
 
-    // Espera 500ms para garantir que o SDK foi carregado
     setTimeout(loadBrick, 500);
   }, []);
 
