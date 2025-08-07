@@ -4,9 +4,29 @@ import Header from "@/components/Header";
 import Script from "next/script";
 import { useEffect, useRef } from "react";
 
+interface MercadoPagoConstructor {
+  new (publicKey: string, options: { locale: string }): {
+    bricks(): {
+      create(
+        name: string,
+        container: string,
+        options: {
+          initialization: { amount: number; preferenceId: string };
+          customization?: any;
+          callbacks?: {
+            onReady?: () => void;
+            onSubmit?: () => void;
+            onError?: (error: unknown) => void;
+          };
+        }
+      ): void;
+    };
+  };
+}
+
 declare global {
   interface Window {
-    MercadoPago: any;
+    MercadoPago: MercadoPagoConstructor;
   }
 }
 
