@@ -5,18 +5,23 @@ import "../globals.css";
 import { CheckCircle } from "lucide-react";
 import { useEffect } from 'react';
 
+declare global {
+  interface Window {
+    fbq?: (action: string, eventName: string, params?: Record<string, unknown>) => void;
+  }
+}
+
 export default function Page() {
 
-   useEffect(() => {
-    // dispara evento de compra
-    if (typeof window !== "undefined" && (window as any).fbq) {
-      (window as any).fbq("track", "Purchase", {
-        value: 14.9,         // valor da compra
-        currency: "BRL",     // moeda
+    useEffect(() => {
+    if (typeof window !== "undefined" && window.fbq) {
+      window.fbq("track", "Purchase", {
+        value: 14.9, // valor da compra
+        currency: "BRL", // moeda
       });
     }
   }, []);
-  
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/5 to-orange-100/20">
       <Header />
