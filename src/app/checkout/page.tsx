@@ -5,20 +5,20 @@ import Script from "next/script";
 import { useEffect, useRef } from "react";
 
 interface MercadoPagoConstructor {
-  new (
-    publicKey: string,
-    options: { locale: string }
-  ): {
+  new (publicKey: string, options: { locale: string }): {
     bricks(): {
       create(
         name: string,
         container: string,
         options: {
-          initialization: { amount: number; preferenceId: string };
+          initialization: { amount: number; preferenceId: string ; mercadoPago: any;};
           customization?: {
             paymentMethods?: {
               creditCard?: string;
               mercadoPago?: string;
+              bankTransfer?: string;
+              prepaidCard?: string;
+              debitCard?: string;
               ticket?: string;
               pix?: string;
             };
@@ -33,7 +33,6 @@ interface MercadoPagoConstructor {
     };
   };
 }
-
 
 declare global {
   interface Window {
@@ -60,14 +59,17 @@ export default function Page() {
       bricksBuilder.create("payment", "brick_container", {
         initialization: {
           amount: 49.9,
-          preferenceId,
+          preferenceId: preferenceId,
+          mercadoPago: mp,
         },
         customization: {
           paymentMethods: {
-            creditCard: "all",
-            mercadoPago: "all",
             ticket: "all",
-            pix: "all",
+            bankTransfer: "all",
+            creditCard: "all",
+            prepaidCard: "all",
+            debitCard: "all",
+            mercadoPago: "all",
           },
         },
         callbacks: {
