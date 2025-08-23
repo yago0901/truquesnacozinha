@@ -27,14 +27,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             fbq('track', 'PageView');
           `}
         </Script>
-        <noscript>
-          <img
-            height="1"
-            width="1"
-            style={{ display: "none" }}
-            src="https://www.facebook.com/tr?id=1308766157495740&ev=PageView&noscript=1"
-          />
-        </noscript>
       </head>
       <body>
         <Providers>{children}</Providers>

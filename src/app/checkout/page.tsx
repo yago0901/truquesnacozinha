@@ -11,7 +11,7 @@ interface MercadoPagoConstructor {
         name: string,
         container: string,
         options: {
-          initialization: { amount: number; preferenceId: string ; mercadoPago: any;};
+          initialization: { amount: number; preferenceId: string ; mercadoPago: Record<string, unknown>;};
           customization?: {
             paymentMethods?: {
               creditCard?: string;
