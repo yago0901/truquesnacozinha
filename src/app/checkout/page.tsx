@@ -137,7 +137,7 @@ export default function Page() {
       }
     }
     setProductId(getProductId(selectedPack, selectedVolume));
-  }, [selectedPack, selectedVolume]);
+  }, [selectedPack, selectedVolume, volumeOptions]);
 
   // Efeito para rotacionar os depoimentos automaticamente
   useEffect(() => {
@@ -315,7 +315,7 @@ export default function Page() {
                                   <p className="text-sm text-gray-500">{testimonial.timeAgo}</p>
                                 </div>
                               </div>
-                              <p className="text-gray-700 text-lg italic">"{testimonial.comment}"</p>
+                              <p className="text-gray-700 text-lg italic">&quot;{testimonial.comment}&quot;</p>
                             </div>
                           </div>
                         </div>
