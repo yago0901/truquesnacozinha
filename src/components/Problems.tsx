@@ -2,8 +2,10 @@
 
 import { Clock, DollarSign, Heart, Users } from "lucide-react";
 import { Button } from "./ui/button";
+import { useRouter } from 'next/navigation';
 
 const Problems = () => {
+  const router = useRouter();
   const problems = [
     {
       icon: <Clock className="w-8 h-8 text-red-500" />,
@@ -17,13 +19,13 @@ const Problems = () => {
     },
     {
       icon: <Heart className="w-8 h-8 text-red-500" />,
-      title: "Resultados Frustrantes",
-      description: "Pratos que não saem como esperado, texturas erradas e sabores sem graça.",
+      title: "Baixos Resultados",
+      description: "Bolos no murchos ou queimados, falta de prática.",
     },
     {
       icon: <Users className="w-8 h-8 text-red-500" />,
       title: "Vergonha de Cozinhar",
-      description: "Evitando cozinhar para visitas por medo de errar ou não impressionar.",
+      description: "Evitando cozinhar para visitas por medo de errar ou não impressionar. Chega de ficar pedindo comida fora!",
     },
   ];
 
@@ -40,8 +42,8 @@ const Problems = () => {
     },
     {
       icon: <Heart className="w-8 h-8 text-green-500" />,
-      title: "Resultados Profissionais",
-      description: "Texturas perfeitas, sabores equilibrados e apresentação que impressiona.",
+      title: "Altos Resultados",
+      description: "Bolo no ponto, feito com perfeição, sabor de dar água na boca.",
     },
     {
       icon: <Users className="w-8 h-8 text-green-500" />,
@@ -114,7 +116,7 @@ const Problems = () => {
             <Button
               size="sm"
               className="w-full bg-orange-100 hover:bg-orange-200 text-orange-700 border border-orange-300"
-              onClick={() => window.open("https://mpago.la/1Er6XxF", "_blank")}
+              onClick={() => router.push("/checkout")}
             >
               Adquirir Agora
             </Button>
@@ -129,7 +131,7 @@ const Problems = () => {
             <Button
               size="sm"
               className="w-full bg-amber-100 hover:bg-amber-200 text-amber-700 border border-amber-300"
-              onClick={() => window.open("https://mpago.la/1Er6XxF", "_blank")}
+              onClick={() => router.push("/checkout")}
             >
               Acesso Imediato
             </Button>
@@ -142,7 +144,7 @@ const Problems = () => {
             <Button
               size="sm"
               className="w-full bg-red-100 hover:bg-red-200 text-red-700 border border-red-300"
-              onClick={() => window.open("https://mpago.la/1Er6XxF", "_blank")}
+              onClick={() => router.push("/checkout")}
             >
               Quero Todos
             </Button>

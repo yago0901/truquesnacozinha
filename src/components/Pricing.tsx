@@ -2,23 +2,25 @@
 
 import { Button } from "@/components/ui/button";
 import { Check, X } from "lucide-react";
+import { useRouter } from 'next/navigation';
 
 const Pricing = () => {
+  const router = useRouter();
   const bonuses = [
     {
       title: "🎁 BÔNUS: Acesso ao Shakes com Way",
-      value: "R$ 14,90",
+      value: "R$ 47,90",
       description: "Receitas exclusivas de shakes para complementar sua dieta",
     },
     {
       title: "🎁 BÔNUS: Grupo VIP WhatsApp",
-      value: "R$ 14,90",
+      value: "R$ 24,90",
       description: "Acesso ao grupo exclusivo com suporte direto e dicas semanais",
     },
   ];
 
   const comparison = [
-    { feature: "Técnicas profissionais", included: [true, true, true] },
+    { feature: "Técnicas do dia-a-dia", included: [true, true, true] },
     { feature: "Acesso imediato", included: [true, true, true] },
     { feature: "Garantia de 7 dias", included: [true, true, true] },
     { feature: "Bônus exclusivos", included: [false, false, true] },
@@ -28,33 +30,30 @@ const Pricing = () => {
 
   const packages = [
     {
-      name: "Aprendiz",
-      description: "≈68,89% Off Valor por tempo limitado",
+      name: "INICIANTE",
       price: "R$ 14,90",
       originalPrice: "R$ 47,90",
-      discount: "≈68,89% OFF",
+      discount: "68,89% OFF",
       installments: "ou 2x de R$ 7,45",
       cta: "QUERO APENAS 1 VOLUME",
       featured: false,
-      includes: "✅ Volume 1 (Técnicas Básicas)",
+      includes: "✅ Volume 1 (INICIANTE)",
     },
     {
-      name: "Combo Intermediário",
-      description: "≈72,23% Off Valor por tempo limitado",
+      name: "AJUDANTE",
       price: "R$ 39,90",
       originalPrice: "R$ 143,70",
-      discount: "≈72,23% OFF",
+      discount: "72,23% OFF",
       installments: "ou 2x de R$ 24,95",
       cta: "QUERO OS 3 VOLUMES",
       featured: true,
       includes: "✅ Volumes 1 R$14,90 + 2 R$17,90 + 3 R$19,90",
     },
     {
-      name: "Combo Premium",
-      description: "≈39,52% Off Valor por tempo limitado",
+      name: "CHEF",
       price: "R$ 49,90",
       originalPrice: "R$ 82,50",
-      discount: "≈39,52% OFF",
+      discount: "39,52% OFF",
       installments: "ou 2x de R$ 39,95",
       cta: "QUERO TUDO COM BÔNUS",
       featured: false,
@@ -92,7 +91,6 @@ const Pricing = () => {
 
               <div className="text-center space-y-4">
                 <h3 className="text-xl font-bold">{pkg.name}</h3>
-                <p className="text-sm text-muted-foreground">{pkg.description}</p>
 
                 <div className="space-y-2 pt-2">
                   <div className="text-3xl font-bold text-primary">{pkg.price}</div>
@@ -130,11 +128,11 @@ const Pricing = () => {
                   if (!pkg.cta) return;
 
                   if (pkg.cta === "QUERO APENAS 1 VOLUME") {
-                    window.open("https://mpago.la/1Yx4XC5", "_blank", "noopener,noreferrer");
+                    router.push("/checkout");
                   } else if (pkg.cta === "QUERO OS 3 VOLUMES") {
-                    window.open("https://mpago.la/1Er6XxF", "_blank", "noopener,noreferrer");
+                    router.push("/checkout");
                   } else if (pkg.cta === "QUERO TUDO COM BÔNUS") {
-                    window.open("https://mpago.la/1H87DiT", "_blank", "noopener,noreferrer");
+                    router.push("/checkout");
                   }
                 }}
               >
@@ -180,11 +178,7 @@ const Pricing = () => {
               variant="food"
               size="lg"
               className="w-full text-lg py-4 bg-orange-400 text-white cursor-pointer"
-              onClick={() => {
-                // Adicione aqui qualquer lógica de pré-redirecionamento
-                // Ex: Analytics, validações, etc.
-                window.open("https://mpago.la/1Er6XxF", "_blank", "noopener,noreferrer");
-              }}
+              onClick={() => {router.push("/checkout") }}
             >
               🛒 QUERO OS 3 VOLUMES AGORA
             </Button>

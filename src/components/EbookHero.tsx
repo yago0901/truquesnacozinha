@@ -4,18 +4,21 @@ import { Button } from "@/components/ui/button";
 import { Check } from "lucide-react";
 import Kit75Truques from "../assets/kit75truques.png";
 import Image from "next/image";
+import { useRouter } from 'next/navigation';
 
 const EbookHero = () => {
+  const router = useRouter();
+
   return (
     <section id="home" className="section-padding pt-20 bg-gradient-to-br from-primary/5 to-orange-100/20">
       <div className="container-custom">
         <div className="max-w-4xl mx-auto space-y-2">
           {/* Badge */}
           <div className="hidden md:inline-flex items-center bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium">
-            🔥 OFERTA LIMITADA - 3 VOLUMES COMPLETOS
+            🔥 OFERTA LIMITADA - Restam poucas unidades
           </div>
           <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold leading-tight">
-            <span className="text-gradient">75 SEGREDOS </span> PARA SE DAR BEM NA COZINHA
+            <span className="text-gradient">SEGREDOS </span> PARA SE DAR BEM NA COZINHA
           </h1>
 
           <div className="flex flex-col md:flex-row gap-4 items-center">
@@ -30,19 +33,19 @@ const EbookHero = () => {
                   <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
                     <Check className="w-5 h-5 text-green-600" />
                   </div>
-                  <span className="font-medium">DOMINE 75 TÉCNICAS DE COZINHA EM POUCOS DIAS!</span>
+                  <span className="font-medium">CONHEÇA TÉCNICAS DE COZINHA EM POUCOS DIAS!</span>
                 </div>
                 <div className="flex items-center space-x-3">
                   <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
                     <Check className="w-5 h-5 text-green-600" />
                   </div>
-                  <span className="font-medium">Economize evitando disperdício de alimentos</span>
+                  <span className="font-medium">ECONOMIZE TEMPO EVITANDO DISPERDÍCIOS</span>
                 </div>
                 <div className="flex items-center space-x-3">
                   <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
                     <Check className="w-5 h-5 text-green-600" />
                   </div>
-                  <span className="font-medium">Resultados profissionais em casa</span>
+                  <span className="font-medium">TÉCNICAS QUE VÃO TE SURPREENDER</span>
                 </div>
               </div>
             </div>
@@ -75,10 +78,10 @@ const EbookHero = () => {
                 onClick={() => {
                   // Adicione aqui qualquer lógica de pré-redirecionamento
                   // Ex: Analytics, validações, etc.
-                  window.open('https://mpago.la/1Er6XxF', '_blank', 'noopener,noreferrer');
+                  router.push("/checkout");
                 }}
               >
-                🛒 QUERO APRENDER AGORA
+                🛒 QUERO OS TRUQUES AGORA
               </Button>
               <p className="text-xs text-muted-foreground">⚡ Oferta válida por tempo limitado</p>
             </div>

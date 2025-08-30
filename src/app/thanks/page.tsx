@@ -16,8 +16,8 @@ export default function Page() {
     useEffect(() => {
     if (typeof window !== "undefined" && window.fbq) {
       window.fbq("track", "Purchase", {
-        value: 14.9, // valor da compra
-        currency: "BRL", // moeda
+        value: 14.9,
+        currency: "BRL",
       });
     }
   }, []);

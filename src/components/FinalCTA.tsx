@@ -1,8 +1,10 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { useRouter } from 'next/navigation';
 
 const FinalCTA = () => {
+  const router = useRouter();
   return (
     <section className="bg-gradient-to-r from-orange-100 to-orange-300 text-black">
       <div className="container-custom">
@@ -46,7 +48,7 @@ const FinalCTA = () => {
             <div className="bg-white/30 border border-white/50 rounded-3xl p-8 backdrop-blur shadow-lg">
               <div className="space-y-6 text-center">
                 <div className="text-2xl font-semibold text-black/80">
-                  De <span className="line-through text-red-600">R$: 82,50</span> por
+                  De <span className="line-through text-red-600">R$: 297,00</span> por
                 </div>
                 <div className="text-4xl font-extrabold text-yellow-500">Apenas R$ 49,90</div>
 
@@ -54,12 +56,12 @@ const FinalCTA = () => {
 
                 <Button
                   size="lg"
-                  className="bg-orange-400 text-primary hover:bg-black/90 text-xl py-6 px-12 w-full md:w-auto transition"
+                  className="bg-orange-400 text-white hover:bg-black/90 text-xl py-6 px-12 w-full md:w-auto transition"
                   onClick={() => {
-                    window.open("https://mpago.la/1Er6XxF", "_blank", "noopener,noreferrer");
+                   router.push("/checkout");
                   }}
                 >
-                  🚀 ADQUIRIR AGORA
+                  🚀 QUERO AS TÉCNICAS
                 </Button>
 
                 <p className="text-black/70 text-sm italic">
@@ -76,7 +78,7 @@ const FinalCTA = () => {
               está a um clique de descobrir todas elas.&quot;
             </p>
             <div className="text-sm text-black">
-              Mais de 15.000 pessoas já transformaram suas cozinhas. Seja a próxima!
+              Mais de 9.000 pessoas já transformaram suas cozinhas. Seja a próxima!
             </div>
           </div>
         </div>

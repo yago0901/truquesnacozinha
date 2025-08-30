@@ -2,12 +2,14 @@
 
 import { Button } from "@/components/ui/button";
 import { Book } from "lucide-react";
+import { useRouter } from 'next/navigation';
 
 const EbookVolumes = () => {
+  const router = useRouter();
   const volumes = [
     {
       id: 1,
-      pack: 'Iniciante',
+      pack: 'INICIANTE',
       title: "VOLUME 1: TRUQUES NA COZINHA",
       subtitle: "25 Técnicas Essenciais para uma Cozinha Mais Prática",
       description: "O guia definitivo que vai revolucionar sua rotina na cozinha!",
@@ -29,10 +31,10 @@ const EbookVolumes = () => {
     },
     {
       id: 2,
-      pack: 'Ajudante',
+      pack: 'AJUDANTE',
       title: "VOLUME 2: TRUQUES NA COZINHA",
       subtitle: "25 Técnicas para Economizar Tempo e Evitar Sujeira",
-      description: "Para quem quer elevar o nível e dominar técnicas de chef!",
+      description: "Para quem quer elevar o nível e dominar técnicas de cozinha!",
       color: "bg-orange-100 text-orange-700",
       icon: "📗",
       chapters: [
@@ -51,10 +53,10 @@ const EbookVolumes = () => {
     },
     {
       id: 3,
-      pack: 'Chef',
+      pack: 'CHEF',
       title: "VOLUME 3: TRUQUES NA COZINHA",
       subtitle: "25 Técnicas para uma Refeição Saborosa e de Qualidade",
-      description: "Transforme qualquer prato em uma experiência gastronômica!",
+      description: "Faça seu tempo preciso na cozinha valer a pena e ser reconhecido",
       color: "bg-purple-100 text-purple-700",
       icon: "📙",
       chapters: [
@@ -81,8 +83,8 @@ const EbookVolumes = () => {
             Conheça os <span className="text-gradient">3 Volumes</span> Completos
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Uma jornada completa do básico ao avançado. Cada volume foi cuidadosamente elaborado para elevar suas
-            habilidades na cozinha passo a passo.
+            Uma jornada completa por diversas técnicas para seu dia-a-dia na cozinha. Cada volume foi cuidadosamente elaborado para elevar suas
+            habilidades na cozinha te monstrando o passo a passo prático.
           </p>
         </div>
 
@@ -145,11 +147,7 @@ const EbookVolumes = () => {
               variant="food"
               size="lg"
               className="px-12 bg-orange-400 text-white"
-              onClick={() => {
-                // Adicione aqui qualquer lógica de pré-redirecionamento
-                // Ex: Analytics, validações, etc.
-                window.open("https://mpago.la/1Er6XxF", "_blank", "noopener,noreferrer");
-              }}
+              onClick={() => router.push("/checkout")}
             >
               GARANTIR MEUS VOLUMES
             </Button>
