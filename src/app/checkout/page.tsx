@@ -211,10 +211,9 @@ export default function Page() {
     setTimeout(loadBrick, 500);
   }, [productId, price]);
 
-  // Efeito para atualizar o preço quando o volume muda
-  useEffect(() => {
+  const updatePriceAndProductId = useCallback(() => {
     if (selectedPack === 1) {
-      setPrice(getPrice(selectedVolume)); // usa volume para aprendiz
+      setPrice(getPrice(selectedVolume));
     } else {
       const selectedOption = volumeOptions.find((option) => option.id === selectedPack);
       if (selectedOption) {
@@ -223,6 +222,12 @@ export default function Page() {
     }
     setProductId(getProductId(selectedPack, selectedVolume));
   }, [selectedPack, selectedVolume, volumeOptions, getPrice, getProductId]);
+
+  // Efeito para atualizar o preço quando o volume muda
+  useEffect(() => {
+    updatePriceAndProductId();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [updatePriceAndProductId]);
 
   // Efeito para rotacionar os depoimentos automaticamente
   useEffect(() => {
