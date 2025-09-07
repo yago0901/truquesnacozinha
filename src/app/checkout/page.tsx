@@ -18,18 +18,19 @@ export default function Page() {
   const testimonials: Testimonial[] = [
     {
       id: 1,
-      name: "Maria Silva",
+      name: "Giovana Novato",
       comment: "Produto excelente, superou minhas expectativas. A qualidade é impressionante e o suporte foi incrível!",
       timeAgo: "há 2 semanas",
       color: "from-purple-500 to-pink-500",
+      url: "J1JAzQe3mO0",
     },
     {
       id: 2,
-      name: "João Santos",
-      comment:
-        "Estou muito satisfeito com a qualidade. Com certeza comprarei novamente em breve! Recomendo para todos.",
+      name: "Maria Silva",
+      comment: "Estou muito satisfeita com a qualidade. Com certeza comprarei o volume 2! Recomendo para todos.",
       timeAgo: "há 1 mês",
       color: "from-blue-500 to-teal-400",
+      url: "EQydGT7SKRs",
     },
     {
       id: 3,
@@ -37,6 +38,7 @@ export default function Page() {
       comment: "Incrível como esse produto mudou minha rotina. Fácil de usar e entregou tudo que promete!",
       timeAgo: "há 3 dias",
       color: "from-amber-500 to-orange-500",
+      url: "Ie50XuTphXo",
     },
   ];
 
@@ -93,7 +95,7 @@ export default function Page() {
 
       bricksBuilder.create("payment", "brick_container", {
         initialization: {
-          amount: parseInt(price.toFixed(2)),
+          amount: Number(price.toFixed(2)),
           preferenceId: preferenceId,
           mercadoPago: mp,
         },
@@ -112,9 +114,85 @@ export default function Page() {
             console.log("Brick pronto");
             setIsLoading(false);
           },
-          onSubmit: () => {
-            return;
-          },
+          onSubmit: (async (formData: any) => {
+            try {
+              console.log("FormData recebido do Brick:", formData);
+
+              const selectedOption = volumeOptions.find((o) => o.id === selectedPack);
+              const productDescription = `Compra Truques na Cozinha - ${selectedOption?.label}${
+                selectedPack === 1 ? ` - Volume ${selectedVolume}` : ""
+              }`;
+
+              // 🔥 OBTER OS CAMPOS CORRETAMENTE DO BRICK
+              // O Brick pode estruturar os dados de forma diferente
+              const paymentMethodId = formData.payment_method_id || formData.paymentMethod?.id || formData.paymentType;
+
+              const token = formData.token || formData.card?.token || formData.payment_method_option?.token;
+
+              // Se for PIX, o token pode não ser necessário
+              const isPix = paymentMethodId === "pix";
+
+              const payload: any = {
+                transaction_amount: price,
+                description: productDescription,
+                payment_method_id: paymentMethodId,
+                payer: {
+                  email: formData.payer?.email || "truquesnacozinhaoficial@gmail.com",
+                },
+              };
+
+              // 🔥 PARA CARTÃO: adicionar token e installments
+              if (!isPix && token) {
+                payload.token = token;
+                payload.installments = formData.installments || 1;
+
+                if (formData.issuer_id) payload.issuer_id = formData.issuer_id;
+                if (formData.payment_method_option?.issuer_id) {
+                  payload.issuer_id = formData.payment_method_option.issuer_id;
+                }
+              }
+
+              // 🔥 PARA PIX: não precisa de token, mas pode precisar de outros campos
+              if (isPix) {
+                // PIX geralmente não requer token
+                delete payload.token;
+                // Adicionar campos específicos do PIX se existirem
+                if (formData.pix) {
+                  payload.pix = formData.pix;
+                }
+              }
+
+              // Identification se disponível
+              if (formData.payer?.identification) {
+                payload.payer.identification = formData.payer.identification;
+              }
+
+              console.log("Payload final para API:", payload);
+
+              const res = await fetch("/api/process-payment", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload),
+              });
+
+              const data = await res.json();
+
+              if (!res.ok) {
+                throw new Error(data.error || "Erro no processamento");
+              }
+
+              if (data.status === "approved" || data.status === "pending") {
+                console.log("Pagamento processado:", data);
+                window.location.href = `/sucesso?id=${data.id}`;
+              }
+
+              return data;
+            } catch (error) {
+              console.error("Erro no submit:", error);
+              alert("Erro ao processar pagamento. Tente novamente.");
+              throw error;
+            }
+          }) as any,
           onError: (error: unknown) => {
             console.error("Erro ao criar brick:", error);
             setIsLoading(false);
@@ -143,7 +221,7 @@ export default function Page() {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
-    }, 5000);
+    }, 10000);
 
     return () => clearInterval(interval);
   }, [testimonials.length]);
@@ -277,29 +355,17 @@ export default function Page() {
                         <div key={testimonial.id} className="w-full flex-shrink-0 px-2">
                           <div className="flex flex-col md:flex-row gap-6 items-start p-4">
                             {/* Área do Vídeo (placeholder) */}
-                            <div className="w-full md:w-2/5 aspect-video bg-gradient-to-br from-gray-200 to-gray-300 rounded-lg flex items-center justify-center">
-                              <div className="text-center">
-                                <svg
-                                  className="w-12 h-12 text-gray-500 mx-auto mb-2"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  viewBox="0 0 24 24"
-                                >
-                                  <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
-                                  />
-                                  <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                                  />
-                                </svg>
-                                <p className="text-sm text-gray-600">Depoimento em vídeo</p>
-                              </div>
+                            <div className="w-full md:w-2/5 aspect-video bg-black rounded-lg overflow-hidden">
+                              <iframe
+                                src={`https://www.youtube.com/embed/${
+                                  testimonial.url.split("v=")[1] || testimonial.url.split("/").pop()
+                                }?modestbranding=1&rel=0`}
+                                title={`Depoimento de ${testimonial.name}`}
+                                frameBorder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowFullScreen
+                                className="w-full h-full"
+                              />
                             </div>
 
                             {/* Texto do Depoimento (alinhado à direita) */}

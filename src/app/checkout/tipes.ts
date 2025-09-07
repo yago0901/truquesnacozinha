@@ -4,6 +4,7 @@ export interface Testimonial {
   comment: string;
   timeAgo: string;
   color: string;
+  url: string;
 }
 
 export interface MercadoPagoConstructor {
