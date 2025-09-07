@@ -2,11 +2,11 @@
 
 import Header from "@/components/Header";
 import Script from "next/script";
-import { useEffect, useRef, useState } from "react";
-import { Testimonial } from "./tipes";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { PaymentFormData, PaymentPayload, PreferenceResponse, Testimonial } from "./tipes";
 
 export default function Page() {
-  const brickContainerRef = useRef(null);
+  const brickContainerRef = useRef<HTMLDivElement>(null);
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedPack, setSelectedPack] = useState(1);
@@ -15,34 +15,38 @@ export default function Page() {
   const [productId, setProductId] = useState("A");
 
   // Dados de exemplo para o carrossel
-  const testimonials: Testimonial[] = [
-    {
-      id: 1,
-      name: "Giovana Novato",
-      comment: "Produto excelente, superou minhas expectativas. A qualidade é impressionante e o suporte foi incrível!",
-      timeAgo: "há 2 semanas",
-      color: "from-purple-500 to-pink-500",
-      url: "J1JAzQe3mO0",
-    },
-    {
-      id: 2,
-      name: "Maria Silva",
-      comment: "Estou muito satisfeita com a qualidade. Com certeza comprarei o volume 2! Recomendo para todos.",
-      timeAgo: "há 1 mês",
-      color: "from-blue-500 to-teal-400",
-      url: "EQydGT7SKRs",
-    },
-    {
-      id: 3,
-      name: "Ana Costa",
-      comment: "Incrível como esse produto mudou minha rotina. Fácil de usar e entregou tudo que promete!",
-      timeAgo: "há 3 dias",
-      color: "from-amber-500 to-orange-500",
-      url: "Ie50XuTphXo",
-    },
-  ];
+  const testimonials = useMemo(
+    (): Testimonial[] => [
+      {
+        id: 1,
+        name: "Giovana Novato",
+        comment:
+          "Produto excelente, superou minhas expectativas. A qualidade é impressionante e o suporte foi incrível!",
+        timeAgo: "há 2 semanas",
+        color: "from-purple-500 to-pink-500",
+        url: "J1JAzQe3mO0",
+      },
+      {
+        id: 2,
+        name: "Maria Silva",
+        comment: "Estou muito satisfeita com a qualidade. Com certeza comprarei o volume 2! Recomendo para todos.",
+        timeAgo: "há 1 mês",
+        color: "from-blue-500 to-teal-400",
+        url: "EQydGT7SKRs",
+      },
+      {
+        id: 3,
+        name: "Ana Costa",
+        comment: "Incrível como esse produto mudou minha rotina. Fácil de usar e entregou tudo que promete!",
+        timeAgo: "há 3 dias",
+        color: "from-amber-500 to-orange-500",
+        url: "Ie50XuTphXo",
+      },
+    ],
+    []
+  );
 
-  const getPrice = (volumeId: number) => {
+  const getPrice = useCallback((volumeId: number): number => {
     switch (volumeId) {
       case 1:
         return 14.9;
@@ -53,16 +57,19 @@ export default function Page() {
       default:
         return 14.9;
     }
-  };
+  }, []);
 
   // Opções de volume com preços
-  const volumeOptions = [
-    { id: 1, label: "INICIANTE", price: getPrice(1), description: "Experimente nosso produto" },
-    { id: 2, label: "AJUDANTE", price: 39.9, description: "Leve 2 com 10% de desconto" },
-    { id: 3, label: "CHEF", price: 49.9, description: "Leve 3 com 15% de desconto" },
-  ];
+  const volumeOptions = useMemo(
+    () => [
+      { id: 1, label: "INICIANTE", price: getPrice(1), description: "Experimente nosso produto" },
+      { id: 2, label: "AJUDANTE", price: 39.9, description: "Leve 2 com 10% de desconto" },
+      { id: 3, label: "CHEF", price: 49.9, description: "Leve 3 com 15% de desconto" },
+    ],
+    [getPrice]
+  );
 
-  const getProductId = (packId: number, volume: number) => {
+  const getProductId = useCallback((packId: number, volume: number): string => {
     if (packId === 1) {
       if (volume === 1) return "A";
       if (volume === 2) return "B";
@@ -71,7 +78,7 @@ export default function Page() {
     if (packId === 2) return "D";
     if (packId === 3) return "E";
     return "A";
-  };
+  }, []);
 
   useEffect(() => {
     const loadBrick = async () => {
@@ -85,7 +92,7 @@ export default function Page() {
         },
         body: JSON.stringify({ productId }),
       });
-      const { id: preferenceId } = await res.json();
+      const { id: preferenceId } = (await res.json()) as PreferenceResponse;
 
       const mp = new window.MercadoPago(process.env.NEXT_PUBLIC_MP_PUBLIC_KEY!, {
         locale: "pt-BR",
@@ -114,7 +121,7 @@ export default function Page() {
             console.log("Brick pronto");
             setIsLoading(false);
           },
-          onSubmit: (async (formData: any) => {
+          onSubmit: (async (formData: PaymentFormData) => {
             try {
               console.log("FormData recebido do Brick:", formData);
 
@@ -132,7 +139,7 @@ export default function Page() {
               // Se for PIX, o token pode não ser necessário
               const isPix = paymentMethodId === "pix";
 
-              const payload: any = {
+              const payload: PaymentPayload = {
                 transaction_amount: price,
                 description: productDescription,
                 payment_method_id: paymentMethodId,
@@ -192,7 +199,7 @@ export default function Page() {
               alert("Erro ao processar pagamento. Tente novamente.");
               throw error;
             }
-          }) as any,
+          }) as unknown as () => void,
           onError: (error: unknown) => {
             console.error("Erro ao criar brick:", error);
             setIsLoading(false);
