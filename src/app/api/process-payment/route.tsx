@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { MercadoPagoConfig, Payment } from "mercadopago";
+import { PaymentRequest } from "./tipes";
 
 const client = new MercadoPagoConfig({
   accessToken: process.env.MP_ACCESS_TOKEN!,
@@ -23,19 +24,22 @@ export async function POST(req: Request) {
 
     const missingFields = requiredFields.filter((field) => !body[field]);
     if (missingFields.length > 0) {
-      return NextResponse.json({ 
-        error: `Campos obrigatórios faltando: ${missingFields.join(", ")}`
-      }, { status: 400 });
+      return NextResponse.json(
+        {
+          error: `Campos obrigatórios faltando: ${missingFields.join(", ")}`,
+        },
+        { status: 400 }
+      );
     }
 
     // ✅ CONSTRUIR PAYLOAD CORRETO PARA O MERCADO PAGO
-    const mpPayload: any = {
+    const mpPayload: PaymentRequest = {
       transaction_amount: body.transaction_amount,
       description: body.description,
       payment_method_id: body.payment_method_id,
       payer: {
         email: body.payer.email,
-      }
+      },
     };
 
     // ✅ ADICIONAR CAMPOS ESPECÍFICOS
@@ -62,15 +66,16 @@ export async function POST(req: Request) {
 
     console.log("✅ Resposta do Mercado Pago:", response);
     return NextResponse.json(response);
-
-  } catch (error: any) {
+  } catch (error) {
     console.error("❌ Erro detalhado:", error);
-    
+
+    const errorObj = error as Error;
+
     return NextResponse.json(
       {
         error: "Erro ao processar pagamento",
-        details: error.message,
-        stack: process.env.NODE_ENV === "development" ? error.stack : undefined
+        details: errorObj.message,
+        stack: process.env.NODE_ENV === "development" ? errorObj.stack : undefined,
       },
       { status: 500 }
     );

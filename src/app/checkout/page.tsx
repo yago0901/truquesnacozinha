@@ -222,7 +222,7 @@ export default function Page() {
       }
     }
     setProductId(getProductId(selectedPack, selectedVolume));
-  }, [selectedPack, selectedVolume, volumeOptions]);
+  }, [selectedPack, selectedVolume, volumeOptions, getPrice, getProductId]);
 
   // Efeito para rotacionar os depoimentos automaticamente
   useEffect(() => {
