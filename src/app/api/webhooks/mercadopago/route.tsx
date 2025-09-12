@@ -3,27 +3,16 @@ import crypto from "crypto";
 import { MercadoPagoConfig, Payment } from "mercadopago";
 import { PaymentInfo, PaymentStatusHandlers, WebhookBody } from "./tipes";
 import nodemailer from "nodemailer";
+import { sendProductEmail } from '@/utils/emailSender';
 
 // Configure suas credenciais do Mercado Pago
 const MP_WEBHOOK_SECRET = process.env.MP_WEBHOOK_SECRET!;
 const MP_ACCESS_TOKEN = process.env.MP_ACCESS_TOKEN!;
 
-// Configuração do Gmail
-const GMAIL_USER = process.env.GMAIL_USER!;
-const GMAIL_PASS = process.env.GMAIL_PASS!;
-
 const client = new MercadoPagoConfig({
   accessToken: MP_ACCESS_TOKEN,
 });
 
-// Configuração do transporter
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: GMAIL_USER,
-    pass: GMAIL_PASS,
-  },
-});
 
 export async function POST(req: NextRequest) {
   try {
@@ -130,53 +119,7 @@ async function handleApprovedPayment(payment: PaymentInfo) {
       console.error("Falha ao enviar e-mail para:", payment.payer.email);
     }
   }
-
-  // Aqui você pode:
-  // - Liberar acesso ao produto
-  // - Enviar email de confirmação
-  // - Atualizar status no banco de dados
-  // await updateOrderStatus(payment.external_reference, 'approved');
-}
-
-// Função para enviar e-mail com o produto
-export async function sendProductEmail(to: string, payment: PaymentInfo) {
-  try {
-    const mailOptions = {
-      from: `"Sua Empresa" <${GMAIL_USER}>`,
-      to: to,
-      subject: "Seu produto foi liberado! 🎉",
-      html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #4CAF50;">Obrigado pela sua compra!</h2>
-          <p>Seu pagamento foi confirmado e seu produto já está disponível.</p>
-          
-          <div style="background-color: #f9f9f9; padding: 20px; border-radius: 5px; margin: 20px 0;">
-            <h3>📦 Detalhes da Compra</h3>
-            <p><strong>ID do Pagamento:</strong> ${payment.id}</p>
-            <p><strong>Valor:</strong> R$ ${payment.transaction_amount}</p>
-            <p><strong>Status:</strong> Aprovado ✅</p>
-          </div>
-          
-          <div style="background-color: #e8f5e8; padding: 20px; border-radius: 5px; margin: 20px 0;">
-            <h3>🎁 Seu Produto</h3>
-            <p><strong>Link de acesso:</strong> <a href="https://seusite.com/acesso-produto">Clique aqui para acessar</a></p>
-            <p><strong>Instruções:</strong> Siga o guia anexo para começar a usar.</p>
-          </div>
-          
-          <p style="color: #666; font-size: 14px;">
-            Em caso de dúvidas, responda este e-mail ou entre em contato conosco.
-          </p>
-        </div>
-      `,
-    };
-
-    const result = await transporter.sendMail(mailOptions);
-    console.log("E-mail enviado com sucesso:", result.messageId);
-    return true;
-  } catch (error) {
-    console.error("Erro ao enviar e-mail:", error);
-    return false;
-  }
+  
 }
 
 async function handlePendingPayment(payment: PaymentInfo) {
