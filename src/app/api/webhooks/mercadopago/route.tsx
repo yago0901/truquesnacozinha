@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import { MercadoPagoConfig, Payment } from "mercadopago";
 import { PaymentInfo, PaymentStatusHandlers, WebhookBody } from "./tipes";
-import { sendProductEmail } from '@/utils/emailSender';
+import { sendProductEmail } from "@/utils/emailSender";
 
 // Configure suas credenciais do Mercado Pago
 const MP_WEBHOOK_SECRET = process.env.MP_WEBHOOK_SECRET!;
@@ -12,25 +12,27 @@ const client = new MercadoPagoConfig({
   accessToken: MP_ACCESS_TOKEN,
 });
 
-
 export async function POST(req: NextRequest) {
   try {
+    const rawBody = await req.text();
     // Ler o corpo da requisição
-    const body: WebhookBody = await req.json();
 
     // Verificar assinatura do webhook
     const signature = req.headers.get("x-signature");
     const signatureTs = req.headers.get("x-signature-ts");
+    
 
     if (!signature || !signatureTs) {
       return NextResponse.json({ error: "Missing signature headers" }, { status: 400 });
     }
 
-    const isValid = verifySignature(JSON.stringify(body), signatureTs, signature, MP_WEBHOOK_SECRET);
+    const isValid = verifySignature(rawBody, signatureTs, signature, MP_WEBHOOK_SECRET);
 
     if (!isValid) {
       return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
     }
+
+    const body: WebhookBody = JSON.parse(rawBody);
 
     // Processar apenas webhooks de pagamento
     const { type, data } = body;
@@ -50,10 +52,14 @@ export async function POST(req: NextRequest) {
 
 // Função para verificar a assinatura
 function verifySignature(payload: string, ts: string, signature: string, secret: string): boolean {
+  // O Mercado Pago usa o formato: sha256=HASH
+  // Precisamos extrair apenas o hash se vier com o prefixo
+  const receivedSignature = signature.startsWith("sha256=") ? signature.substring(7) : signature;
+
   const data = `${ts}.${payload}`;
   const expectedSignature = crypto.createHmac("sha256", secret).update(data).digest("hex");
 
-  return signature === expectedSignature;
+  return receivedSignature === expectedSignature;
 }
 
 // Função para processar pagamentos
@@ -118,7 +124,6 @@ async function handleApprovedPayment(payment: PaymentInfo) {
       console.error("Falha ao enviar e-mail para:", payment.payer.email);
     }
   }
-
 }
 
 async function handlePendingPayment(payment: PaymentInfo) {
