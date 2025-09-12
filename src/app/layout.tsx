@@ -1,18 +1,17 @@
 import Providers from "@/providers";
 import "./globals.css";
 import { ReactNode } from "react";
-import Script from 'next/script';
+import Script from "next/script";
 
 export const metadata = {
-  title: "Seu Título",
-  description: "Descrição do site",
+  title: "Truques na Cozinha",
+  description: "Os Segredos da Cozinha Revelados",
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="pt">
-      <head>
-        {/* Meta Pixel Code */}
+      <body>
         <Script id="facebook-pixel" strategy="afterInteractive">
           {`
             !function(f,b,e,v,n,t,s)
@@ -27,8 +26,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             fbq('track', 'PageView');
           `}
         </Script>
-      </head>
-      <body>
         <Providers>{children}</Providers>
       </body>
     </html>
