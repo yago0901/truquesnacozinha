@@ -1,7 +1,6 @@
 "use client";
 
 import Header from "@/components/Header";
-import "../globals.css";
 import { CheckCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import Image from "next/image";
