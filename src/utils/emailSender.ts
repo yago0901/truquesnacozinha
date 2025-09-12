@@ -1,5 +1,6 @@
 // src/utils/emailSender.ts
 import nodemailer from 'nodemailer';
+import { PaymentInfo } from '@/app/api/webhooks/mercadopago/tipes';
 
 const GMAIL_USER = process.env.GMAIL_USER!;
 const GMAIL_PASS = process.env.GMAIL_PASS!;
@@ -14,7 +15,7 @@ const transporter = nodemailer.createTransport({
 });
 
 // Função para enviar e-mail com o produto
-export async function sendProductEmail(to: string, payment: any) {
+export async function sendProductEmail(to: string, payment: PaymentInfo) {
   try {
     const mailOptions = {
       from: `"Sua Empresa" <${GMAIL_USER}>`,

@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import { MercadoPagoConfig, Payment } from "mercadopago";
 import { PaymentInfo, PaymentStatusHandlers, WebhookBody } from "./tipes";
-import nodemailer from "nodemailer";
 import { sendProductEmail } from '@/utils/emailSender';
 
 // Configure suas credenciais do Mercado Pago
@@ -119,7 +118,7 @@ async function handleApprovedPayment(payment: PaymentInfo) {
       console.error("Falha ao enviar e-mail para:", payment.payer.email);
     }
   }
-  
+
 }
 
 async function handlePendingPayment(payment: PaymentInfo) {
