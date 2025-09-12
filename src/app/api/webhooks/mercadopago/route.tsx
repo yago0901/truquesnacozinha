@@ -1,82 +1,69 @@
-// src/app/api/webhook/mercadopago/route.ts
-import { NextRequest, NextResponse } from 'next/server';
-import crypto from 'crypto';
-import { MercadoPagoConfig, Payment } from 'mercadopago';
-import { PaymentInfo, PaymentStatusHandlers, WebhookBody } from './tipes';
-
-
+import { NextRequest, NextResponse } from "next/server";
+import crypto from "crypto";
+import { MercadoPagoConfig, Payment } from "mercadopago";
+import { PaymentInfo, PaymentStatusHandlers, WebhookBody } from "./tipes";
+import nodemailer from "nodemailer";
 
 // Configure suas credenciais do Mercado Pago
 const MP_WEBHOOK_SECRET = process.env.MP_WEBHOOK_SECRET!;
 const MP_ACCESS_TOKEN = process.env.MP_ACCESS_TOKEN!;
 
+// Configuração do Gmail
+const GMAIL_USER = process.env.GMAIL_USER!;
+const GMAIL_PASS = process.env.GMAIL_PASS!;
+
 const client = new MercadoPagoConfig({
   accessToken: MP_ACCESS_TOKEN,
+});
+
+// Configuração do transporter
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: GMAIL_USER,
+    pass: GMAIL_PASS,
+  },
 });
 
 export async function POST(req: NextRequest) {
   try {
     // Ler o corpo da requisição
     const body: WebhookBody = await req.json();
-    
+
     // Verificar assinatura do webhook
-    const signature = req.headers.get('x-signature');
-    const signatureTs = req.headers.get('x-signature-ts');
-    
+    const signature = req.headers.get("x-signature");
+    const signatureTs = req.headers.get("x-signature-ts");
+
     if (!signature || !signatureTs) {
-      return NextResponse.json(
-        { error: 'Missing signature headers' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Missing signature headers" }, { status: 400 });
     }
 
-    // Validar assinatura
-    const isValid = verifySignature(
-      JSON.stringify(body),
-      signatureTs,
-      signature,
-      MP_WEBHOOK_SECRET
-    );
+    const isValid = verifySignature(JSON.stringify(body), signatureTs, signature, MP_WEBHOOK_SECRET);
 
     if (!isValid) {
-      return NextResponse.json(
-        { error: 'Invalid signature' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
     }
 
     // Processar apenas webhooks de pagamento
     const { type, data } = body;
 
-    if (type === 'payment') {
+    if (type === "payment") {
       await handlePaymentWebhook(data.id);
     } else {
-      console.log('Webhook type not handled:', type);
+      console.log("Webhook type not handled:", type);
     }
 
     return NextResponse.json({ received: true }, { status: 200 });
-
   } catch (error) {
-    console.error('Webhook error:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    console.error("Webhook error:", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
 
 // Função para verificar a assinatura
-function verifySignature(
-  payload: string,
-  ts: string,
-  signature: string,
-  secret: string
-): boolean {
+function verifySignature(payload: string, ts: string, signature: string, secret: string): boolean {
   const data = `${ts}.${payload}`;
-  const expectedSignature = crypto
-    .createHmac('sha256', secret)
-    .update(data)
-    .digest('hex');
+  const expectedSignature = crypto.createHmac("sha256", secret).update(data).digest("hex");
 
   return signature === expectedSignature;
 }
@@ -86,53 +73,64 @@ async function handlePaymentWebhook(paymentId: string) {
   try {
     // Buscar informações detalhadas do pagamento
     const paymentInfo = await fetchPaymentDetails(paymentId);
-    
-    console.log('Payment webhook received:', {
+
+    console.log("Payment webhook received:", {
       id: paymentInfo.id,
       status: paymentInfo.status,
       amount: paymentInfo.transaction_amount,
-      payer: paymentInfo.payer?.email
+      payer: paymentInfo.payer?.email,
     });
 
     // Mapeamento de handlers para cada status
     const statusHandlers: PaymentStatusHandlers = {
-      'approved': handleApprovedPayment,
-      'pending': handlePendingPayment,
-      'rejected': handleRejectedPayment,
-      'refunded': handleRefundedPayment,
-      'cancelled': handleCancelledPayment,
-      'in_process': handleInProcessPayment,
-      'charged_back': handleChargebackPayment,
+      approved: handleApprovedPayment,
+      pending: handlePendingPayment,
+      rejected: handleRejectedPayment,
+      refunded: handleRefundedPayment,
+      cancelled: handleCancelledPayment,
+      in_process: handleInProcessPayment,
+      charged_back: handleChargebackPayment,
     };
 
     const handler = statusHandlers[paymentInfo.status];
     if (handler) {
       await handler(paymentInfo);
     } else {
-      console.log('Status não tratado:', paymentInfo.status);
+      console.log("Status não tratado:", paymentInfo.status);
     }
-
   } catch (error) {
-    console.error('Error handling payment webhook:', error);
+    console.error("Error handling payment webhook:", error);
   }
 }
 
 // Buscar detalhes do pagamento na API do Mercado Pago
 async function fetchPaymentDetails(paymentId: string): Promise<PaymentInfo> {
   const payment = new Payment(client);
-  
+
   try {
     const paymentInfo = await payment.get({ id: paymentId });
     return paymentInfo as PaymentInfo;
   } catch (error) {
-    console.error('Error fetching payment details:', error);
+    console.error("Error fetching payment details:", error);
     throw error;
   }
 }
 
 // Funções para diferentes status de pagamento
 async function handleApprovedPayment(payment: PaymentInfo) {
-  console.log('Payment approved:', payment.id);
+  console.log("Payment approved:", payment.id);
+
+  // Enviar e-mail com o produto
+  if (payment.payer?.email) {
+    const emailSent = await sendProductEmail(payment.payer.email, payment);
+
+    if (emailSent) {
+      console.log("E-mail de confirmação enviado para:", payment.payer.email);
+    } else {
+      console.error("Falha ao enviar e-mail para:", payment.payer.email);
+    }
+  }
+
   // Aqui você pode:
   // - Liberar acesso ao produto
   // - Enviar email de confirmação
@@ -140,36 +138,77 @@ async function handleApprovedPayment(payment: PaymentInfo) {
   // await updateOrderStatus(payment.external_reference, 'approved');
 }
 
+// Função para enviar e-mail com o produto
+export async function sendProductEmail(to: string, payment: PaymentInfo) {
+  try {
+    const mailOptions = {
+      from: `"Sua Empresa" <${GMAIL_USER}>`,
+      to: to,
+      subject: "Seu produto foi liberado! 🎉",
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #4CAF50;">Obrigado pela sua compra!</h2>
+          <p>Seu pagamento foi confirmado e seu produto já está disponível.</p>
+          
+          <div style="background-color: #f9f9f9; padding: 20px; border-radius: 5px; margin: 20px 0;">
+            <h3>📦 Detalhes da Compra</h3>
+            <p><strong>ID do Pagamento:</strong> ${payment.id}</p>
+            <p><strong>Valor:</strong> R$ ${payment.transaction_amount}</p>
+            <p><strong>Status:</strong> Aprovado ✅</p>
+          </div>
+          
+          <div style="background-color: #e8f5e8; padding: 20px; border-radius: 5px; margin: 20px 0;">
+            <h3>🎁 Seu Produto</h3>
+            <p><strong>Link de acesso:</strong> <a href="https://seusite.com/acesso-produto">Clique aqui para acessar</a></p>
+            <p><strong>Instruções:</strong> Siga o guia anexo para começar a usar.</p>
+          </div>
+          
+          <p style="color: #666; font-size: 14px;">
+            Em caso de dúvidas, responda este e-mail ou entre em contato conosco.
+          </p>
+        </div>
+      `,
+    };
+
+    const result = await transporter.sendMail(mailOptions);
+    console.log("E-mail enviado com sucesso:", result.messageId);
+    return true;
+  } catch (error) {
+    console.error("Erro ao enviar e-mail:", error);
+    return false;
+  }
+}
+
 async function handlePendingPayment(payment: PaymentInfo) {
-  console.log('Payment pending:', payment.id);
+  console.log("Payment pending:", payment.id);
   // Aguardar confirmação do pagamento
   // await updateOrderStatus(payment.external_reference, 'pending');
 }
 
 async function handleRejectedPayment(payment: PaymentInfo) {
-  console.log('Payment rejected:', payment.id);
+  console.log("Payment rejected:", payment.id);
   // Notificar usuário sobre pagamento rejeitado
   // await updateOrderStatus(payment.external_reference, 'rejected');
 }
 
 async function handleRefundedPayment(payment: PaymentInfo) {
-  console.log('Payment refunded:', payment.id);
+  console.log("Payment refunded:", payment.id);
   // Remover acesso ao produto
   // await updateOrderStatus(payment.external_reference, 'refunded');
 }
 
 async function handleCancelledPayment(payment: PaymentInfo) {
-  console.log('Payment cancelled:', payment.id);
+  console.log("Payment cancelled:", payment.id);
   // await updateOrderStatus(payment.external_reference, 'cancelled');
 }
 
 async function handleInProcessPayment(payment: PaymentInfo) {
-  console.log('Payment in process:', payment.id);
+  console.log("Payment in process:", payment.id);
   // await updateOrderStatus(payment.external_reference, 'in_process');
 }
 
 async function handleChargebackPayment(payment: PaymentInfo) {
-  console.log('Payment chargeback:', payment.id);
+  console.log("Payment chargeback:", payment.id);
   // await updateOrderStatus(payment.external_reference, 'chargeback');
 }
 
