@@ -12,15 +12,28 @@ const client = new MercadoPagoConfig({
   accessToken: MP_ACCESS_TOKEN,
 });
 
+export async function OPTIONS(req: NextRequest) {
+  const response = NextResponse.json({}, { status: 200 });
+  response.headers.set("Access-Control-Allow-Origin", "*");
+  response.headers.set("Access-Control-Allow-Methods", "POST, OPTIONS");
+  response.headers.set("Access-Control-Allow-Headers", "Content-Type, x-signature, x-signature-ts");
+  return response;
+}
+
 export async function POST(req: NextRequest) {
   try {
+    console.log("Webhook received - Headers:", {
+      signature: req.headers.get("x-signature"),
+      signatureTs: req.headers.get("x-signature-ts"),
+      contentType: req.headers.get("content-type"),
+    });
     const rawBody = await req.text();
+    console.log("Raw body length:", rawBody.length);
     // Ler o corpo da requisição
 
     // Verificar assinatura do webhook
     const signature = req.headers.get("x-signature");
     const signatureTs = req.headers.get("x-signature-ts");
-    
 
     if (!signature || !signatureTs) {
       return NextResponse.json({ error: "Missing signature headers" }, { status: 400 });
@@ -42,8 +55,9 @@ export async function POST(req: NextRequest) {
     } else {
       console.log("Webhook type not handled:", type);
     }
-
-    return NextResponse.json({ received: true }, { status: 200 });
+    const response = NextResponse.json({ received: true, message: "Webhook processed successfully" }, { status: 200 });
+    response.headers.set("Access-Control-Allow-Origin", "*");
+    return response;
   } catch (error) {
     console.error("Webhook error:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
@@ -158,11 +172,3 @@ async function handleChargebackPayment(payment: PaymentInfo) {
   console.log("Payment chargeback:", payment.id);
   // await updateOrderStatus(payment.external_reference, 'chargeback');
 }
-
-// Configuração para desativar bodyParser padrão e aumentar limite de tamanho
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-  maxDuration: 30, // Segundos - útil para funções mais longas
-};
