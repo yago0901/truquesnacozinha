@@ -22,6 +22,14 @@ export async function OPTIONS(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
+    if (req.method !== "POST") {
+      return NextResponse.json({ error: "Method not allowed" }, { status: 405 });
+    }
+
+    const contentType = req.headers.get("content-type");
+    if (contentType !== "application/json") {
+      return NextResponse.json({ error: "Invalid content type" }, { status: 400 });
+    }
     console.log("Webhook received - Headers:", {
       signature: req.headers.get("x-signature"),
       signatureTs: req.headers.get("x-signature-ts"),
@@ -38,6 +46,11 @@ export async function POST(req: NextRequest) {
     if (!signature || !signatureTs) {
       return NextResponse.json({ error: "Missing signature headers" }, { status: 400 });
     }
+      // Verificar se o secret está configurado
+    if (!MP_WEBHOOK_SECRET) {
+      console.error("MP_WEBHOOK_SECRET not configured");
+      return NextResponse.json({ error: "Webhook secret not configured" }, { status: 500 });
+    }
 
     const isValid = verifySignature(rawBody, signatureTs, signature, MP_WEBHOOK_SECRET);
 
@@ -46,6 +59,7 @@ export async function POST(req: NextRequest) {
     }
 
     const body: WebhookBody = JSON.parse(rawBody);
+    console.log("Parsed body:", body);
 
     // Processar apenas webhooks de pagamento
     const { type, data } = body;
@@ -57,23 +71,35 @@ export async function POST(req: NextRequest) {
     }
     const response = NextResponse.json({ received: true, message: "Webhook processed successfully" }, { status: 200 });
     response.headers.set("Access-Control-Allow-Origin", "*");
+    response.headers.set("X-Webhook-Processed", "true");
     return response;
   } catch (error) {
     console.error("Webhook error:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    const errorResponse = NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    errorResponse.headers.set("Access-Control-Allow-Origin", "*");
+    return errorResponse;
   }
 }
 
 // Função para verificar a assinatura
 function verifySignature(payload: string, ts: string, signature: string, secret: string): boolean {
-  // O Mercado Pago usa o formato: sha256=HASH
-  // Precisamos extrair apenas o hash se vier com o prefixo
-  const receivedSignature = signature.startsWith("sha256=") ? signature.substring(7) : signature;
+  try {
+    const receivedSignature = signature.startsWith("v1=") ? signature.substring(3) : signature;
+    const data = `${ts}.${payload}`;
+    const expectedSignature = crypto
+      .createHmac("sha256", secret)
+      .update(data)
+      .digest("hex");
 
-  const data = `${ts}.${payload}`;
-  const expectedSignature = crypto.createHmac("sha256", secret).update(data).digest("hex");
-
-  return receivedSignature === expectedSignature;
+    // Comparação segura contra timing attacks
+    return crypto.timingSafeEqual(
+      Buffer.from(receivedSignature),
+      Buffer.from(expectedSignature)
+    );
+  } catch (error) {
+    console.error("Error verifying signature:", error);
+    return false;
+  }
 }
 
 // Função para processar pagamentos
