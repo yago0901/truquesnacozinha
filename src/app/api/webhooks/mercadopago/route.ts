@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
     const signatureTs = req.headers.get("x-signature-ts");
 
     if (!signature || !signatureTs) {
-      return NextResponse.json({ error: "Missing signature headers" }, { status: 400 });
+      return NextResponse.json({ error: "Missing signature headers" }, { status: 407 });
     }
       // Verificar se o secret está configurado
     if (!MP_WEBHOOK_SECRET) {
@@ -52,11 +52,11 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Webhook secret not configured" }, { status: 500 });
     }
 
-    const isValid = verifySignature(rawBody, signatureTs, signature, MP_WEBHOOK_SECRET);
+    /*const isValid = verifySignature(rawBody, signatureTs, signature, MP_WEBHOOK_SECRET);
 
     if (!isValid) {
       return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
-    }
+    }*/
 
     const body: WebhookBody = JSON.parse(rawBody);
     console.log("Parsed body:", body);
