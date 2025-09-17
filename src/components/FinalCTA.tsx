@@ -78,7 +78,7 @@ const FinalCTA = () => {
               está a um clique de descobrir todas elas.&quot;
             </p>
             <div className="text-sm text-black">
-              Mais de 9.000 pessoas já transformaram suas cozinhas. Seja a próxima!
+              Mais de 2.500 pessoas já transformaram suas cozinhas. Seja a próxima!
             </div>
           </div>
         </div>

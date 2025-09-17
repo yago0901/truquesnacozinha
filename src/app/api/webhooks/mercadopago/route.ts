@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import { MercadoPagoConfig, Payment } from "mercadopago";
 import { PaymentInfo, PaymentStatusHandlers, WebhookBody } from "./tipes";
-import { sendProductEmail } from "@/utils/emailSender";
+import { sendProductEmail } from "@/services/emailSender";
 
 // Configure suas credenciais do Mercado Pago
 const MP_WEBHOOK_SECRET = process.env.MP_WEBHOOK_SECRET!;

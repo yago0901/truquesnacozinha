@@ -46,7 +46,7 @@ const EbookTestimonials = () => {
       <div className="container-custom">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Mais de <span className="text-gradient">9.000 Pessoas</span> Já Transformaram Suas Cozinhas
+            Mais de <span className="text-gradient">2.500 Pessoas</span> Já Transformaram Suas Cozinhas
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
             Veja o que nossos leitores estão dizendo sobre os resultados que conseguiram:

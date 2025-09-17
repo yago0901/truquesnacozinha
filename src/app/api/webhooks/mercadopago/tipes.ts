@@ -25,6 +25,7 @@ export interface PaymentInfo {
   transaction_amount?: number;
   payer?: {
     email?: string;
+    number?: string;
   };
   external_reference?: string;
 }

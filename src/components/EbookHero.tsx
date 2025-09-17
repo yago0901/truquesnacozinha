@@ -18,13 +18,13 @@ const EbookHero = () => {
             🔥 OFERTA LIMITADA - Restam poucas unidades
           </div>
           <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold leading-tight">
-            <span className="text-gradient">SEGREDOS </span> PARA SE DAR BEM NA COZINHA
+            <span className="text-gradient">PARE DE SOFRER NA COZINHA: </span> 75 Truques que Facilitam Sua Vida!
           </h1>
 
           <div className="flex flex-col md:flex-row gap-4 items-center">
             <div className="space-y-6 md:w-[55%]">
               <p className="text-xl text-muted-foreground max-w-3xl">
-                Pare de sofrer na cozinha! Descubra os truques que ajudam a qualquer um na cozinha!
+                Descubra os truques que mais de 2.500 pessoas utlizam em casa!
               </p>
 
               {/* Benefícios principais */}
@@ -56,8 +56,8 @@ const EbookHero = () => {
                 src={Kit75Truques}
                 alt="Livro de receitas"
                 className="max-w-full h-auto"
-                width={550}
-                height={450}
+                width={450}
+                height={350}
                 priority
               />
             </div>
@@ -65,7 +65,7 @@ const EbookHero = () => {
 
           {/* Preço e CTA */}
           <div className="bg-card p-8 rounded-3xl shadow-lg max-w-md mx-auto">
-            <div className="text-center space-y-4">
+            <div className="text-center space-y-2">
               <div className='hidden md:flex md:justify-center'>
                 <span className="text-3xl font-bold text-primary">R$ 39,90</span>
                 <span className="text-muted-foreground line-through ml-2">R$ 143,70</span>
@@ -81,7 +81,7 @@ const EbookHero = () => {
                   router.push("/checkout");
                 }}
               >
-                🛒 QUERO OS TRUQUES AGORA
+                QUERO DESCOBRIR
               </Button>
               <p className="text-xs text-muted-foreground">⚡ Oferta válida por tempo limitado</p>
             </div>
